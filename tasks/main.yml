@@ -1,0 +1,90 @@
+---
+
+- include_vars: main.yml
+
+##############################################
+# Create the dedicated OS user (matching the original DB user) for executing the SMW restore process
+- name: Add user {{lsdr_restore_os_user}}
+  user: name={{lsdr_restore_os_user}}
+
+##############################################
+# Create the dedicated database to import the SMW database backup .sql into
+- name: Create restore database
+  mysql_db: name={{lsdr_restore_db_name}} state=present
+
+- name: Check if .my.cnf file already exists
+  stat: path=/home/{{lsdr_restore_os_user}}/.my.cnf
+  register: mycnf_file
+
+- name: Create mysql restore user password
+  command: /usr/bin/openssl rand -base64 16
+  register: mysql_user_passwd
+  when: mycnf_file.stat.exists == false
+
+- name: Add mysql user
+  mysql_user: name={{lsdr_restore_os_user}}
+    host={{item}}
+    password={{mysql_user_passwd.stdout}}
+    priv={{lsdr_restore_db_name}}.*:ALL
+    state=present
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
+  when: mycnf_file.stat.exists == false
+
+- name: Create {{lsdr_restore_os_user}} .my.cnf file
+  template: src=my.restore_mysql_user.cnf.j2 dest=/home/{{lsdr_restore_os_user}}/.my.cnf owner={{lsdr_restore_os_user}} group=www-data mode=0770
+  when: mycnf_file.stat.exists == false
+
+##############################################
+# GPG KEYS
+- include: install_gpg_keys.yml
+
+##############################################
+# RESTORE FROM S3
+- name: Create restore.sh file
+  template: src=restore.sh.j2 dest=/home/{{lsdr_restore_os_user}}/restore.sh owner={{lsdr_restore_os_user}} group=www-data mode=0770
+
+- name: Create /{{lsdr_restore_os_user}}/restore/
+  file: path=/{{lsdr_restore_os_user}}/restore
+    state=directory
+    owner={{lsdr_restore_os_user}}
+    group={{lsdr_restore_os_user}}
+    mode=777
+
+- name: Create {{lsdr_restore_smw_root}}
+  file: path={{lsdr_restore_smw_root}}
+    state=directory
+    owner={{lsdr_restore_os_user}}
+    group=www-data
+
+- name: Create duplicity log file
+  copy: content=""
+    dest=/var/log/duplicity.log
+    owner={{lsdr_restore_os_user}}
+    group={{lsdr_restore_os_user}}
+
+- name: Restore from Amazon AWS S3
+  command: /home/{{lsdr_restore_os_user}}/{{lsdr_duplicity_restore_script}}
+  become_user: "{{lsdr_restore_os_user}}"
+
+- name: Update $wgDBpassword in LocalSettings.php
+  lineinfile: dest={{lsdr_restore_smw_root}}/LocalSettings.php
+    regexp='^\$wgDBpassword'
+    line='$wgDBpassword = "{{mysql_user_passwd.stdout}}";'
+
+- name: Set $wgReadOnly=true
+  lineinfile: dest={{lsdr_restore_smw_root}}/LocalSettings.php
+    insertafter='^<\?php$'
+    line='$wgReadOnly=true;'
+
+- name: Adapt permissions for/in {{lsdr_restore_smw_root}}
+  file: path={{lsdr_restore_smw_root}}
+    state=directory
+    owner={{lsdr_restore_os_user}}
+    group=www-data
+    recurse=yes
+    mode=770
+  notify:
+  	- restart apache

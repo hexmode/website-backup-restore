@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export AWS_ACCESS_KEY_ID="<...>"
+export AWS_SECRET_ACCESS_KEY="<...>"
+export PASSPHRASE="<...>"
+duplicity <...> /{{lsdr_restore_os_user}}/restore/ >>/var/log/duplicity.log
+
+mysql \
+  --defaults-file=/home/{{lsdr_restore_os_user}}/.my.cnf \
+  -u {{lsdr_restore_os_user}} {{lsdr_restore_db_name}} < /{{lsdr_restore_os_user}}/restore/smw_dump.sql
