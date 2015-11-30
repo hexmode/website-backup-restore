@@ -6,16 +6,16 @@
 - name: Copy GPG secret key
   copy: content="{{lsdr_secret_gpg_key}}" dest=/tmp/lsdr_secret_gpg_key.gpg
 
-- name: Install GPG public key for {{lsdr_restore_os_user}}
+- name: Install GPG public key for {{lsdr_restoring_os_user}}
   shell: gpg --import lsdr_public_gpg_key.gpg
     chdir=/tmp
   become: yes
-  become_user: "{{lsdr_restore_os_user}}"
+  become_user: "{{lsdr_restoring_os_user}}"
   ignore_errors: yes
 
-- name: Install GPG secret key for {{lsdr_restore_os_user}}
+- name: Install GPG secret key for {{lsdr_restoring_os_user}}
   shell: gpg --allow-secret-key-import --import lsdr_secret_gpg_key.gpg
     chdir=/tmp
   become: yes
-  become_user: "{{lsdr_restore_os_user}}"
+  become_user: "{{lsdr_restoring_os_user}}"
   ignore_errors: yes
