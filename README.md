@@ -1,12 +1,12 @@
 Role Name
 =========
 
-This role restores a [Semantic MediaWikis](http://www.semantic-mediawiki.org) instance using [Duplicity](http://duplicity.nongnu.org/) by executing the following steps:
+This role restores a [Semantic MediaWiki](http://www.semantic-mediawiki.org) instance using [Duplicity](http://duplicity.nongnu.org/) by executing the following steps:
 
 1. Create the dedicated OS user (matching the original DB user) for executing the SMW restore process
 2. Create the dedicated SMW root to copy the restored SMW root content into
 3. Create the dedicated database to import the SMW database backup .sql into
-4. Use [Duplicity](http://duplicity.nongnu.org/) to restore a backup set to /<OS user>/restore/
+4. Use [Duplicity](http://duplicity.nongnu.org/) to restore a backup set
 5. Copy the restored SMW root content into the dedicated SMW root created in step 2
 6. Import the restored SMW database backup .sql into the database created in step 3
 7. Run the following SMW maintenance scripts:
@@ -48,6 +48,8 @@ Example Playbook
 	  gather_facts: False
 	  roles:
 	    - LinuxCompetenceCenter-Ansible-Roles.lcc-smw-duplicity-restore
+	  post_tasks:
+	  	Place special operations here. (e.g. for adapting LocalSettings.php)
 
 License
 -------

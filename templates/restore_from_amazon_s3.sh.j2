@@ -4,7 +4,7 @@ export AWS_ACCESS_KEY_ID="{{lsdr_aws_access_key_id}}"
 export AWS_SECRET_ACCESS_KEY="{{lsdr_aws_secret_access_key}}"
 export PASSPHRASE="{{lsdr_gnupg_secret_passphrase}}"
 duplicity {{lsdr_amazon_s3_bucket_url}} \
-  {{lsdr_duplicity_restore_path}} >> /var/log/duplicity.log
+  {{lsdr_duplicity_restore_path}}/ >> /var/log/duplicity.log
 
 mysql \
   --defaults-file=/home/{{lsdr_restoring_os_user}}/.my.cnf \

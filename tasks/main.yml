@@ -65,10 +65,8 @@
   command: /home/{{lsdr_restoring_os_user}}/{{lsdr_duplicity_restore_script}}
   become_user: "{{lsdr_restoring_os_user}}"
 
-- name: Update $wgDBpassword in LocalSettings.php
-  lineinfile: dest={{lsdr_smw_root}}/LocalSettings.php
-    regexp='^\$wgDBpassword'
-    line='$wgDBpassword = "{{mysql_user_passwd.stdout}}";'
+- name: Copy the restored SMW root into the Apache root
+  command: creates={{lsdr_smw_root}} cp -r {{lsdr_restored_smw_root}} {{lsdr_smw_root}}
 
 - name: Set $wgReadOnly=true
   lineinfile: dest={{lsdr_smw_root}}/LocalSettings.php
