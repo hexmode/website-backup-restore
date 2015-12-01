@@ -132,7 +132,7 @@ galaxy_info:
   #- packaging
   #- system
   - web
-dependencies: []
+dependencies:
   Duplicity
   GnuPG
   # List your role dependencies here, one per line.
