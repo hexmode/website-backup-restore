@@ -1,0 +1,34 @@
+---
+
+##############################################
+# Create the dedicated database to import the SMW database backup .sql into
+- name: Create restore database
+  mysql_db: name={{lsdr_restoring_db_name}} state=present
+
+- name: Check if .my.cnf file already exists
+  stat: path=/home/{{lsdr_restoring_os_user}}/.my.cnf
+  register: mycnf_file
+
+- name: Create mysql restore user password
+  command: /usr/bin/openssl rand -base64 16
+  register: mysql_user_passwd
+  when: mycnf_file.stat.exists == false
+
+- name: Add mysql user
+  mysql_user: name={{lsdr_restoring_os_user}}
+    host={{item}}
+    password={{mysql_user_passwd.stdout}}
+    priv={{lsdr_restoring_db_name}}.*:ALL
+    state=present
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
+  when: mycnf_file.stat.exists == false
+
+- name: Create {{lsdr_restoring_os_user}} .my.cnf file
+  template: src=my.restore_mysql_user.cnf.j2
+    dest=/home/{{lsdr_restoring_os_user}}/.my.cnf
+    owner={{lsdr_restoring_os_user}}
+    group=www-data mode=0770
+  when: mycnf_file.stat.exists == false

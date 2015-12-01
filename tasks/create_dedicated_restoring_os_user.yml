@@ -1,5 +1,8 @@
 ---
 
+- name: Create the dedicated OS user (matching the original DB user) for executing the SMW restore process
+  user: name={{lsdr_restoring_os_user}}
+
 - name: Copy GPG public key
   copy: content="{{lsdr_public_gpg_key}}" dest=/tmp/lsdr_public_gpg_key.gpg
 

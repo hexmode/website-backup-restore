@@ -1,5 +1,5 @@
-Role Name
-=========
+lcc-smw-duplicity-restore
+=========================
 
 This role restores a [Semantic MediaWiki](http://www.semantic-mediawiki.org) instance using [Duplicity](http://duplicity.nongnu.org/) by executing the following steps:
 
@@ -18,8 +18,6 @@ This role restores a [Semantic MediaWiki](http://www.semantic-mediawiki.org) ins
 Requirements
 ------------
 
-This role requires:
-
 * [Duplicity](http://duplicity.nongnu.org/)
 * [GnuPG](https://www.gnupg.org/)
 
@@ -31,12 +29,12 @@ Role Variables
 
 If you use this playbook to restore an SMW into a Vagrant box (e.g. [ch.l-c-c.standard-smw](https://atlas.hashicorp.com/LinuxCompetenceCenter/boxes/ch.l-c-c.standard-smw)), then include this file in your Vagrantfile by `ansible.extra_vars = "variables.yml"`.
 
-You will be prompted for this strong password each time you execute the playbook.
+You will be prompted for the password each time you execute the playbook (whether within a Vagrantfile or otherwise).
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role doesn't depend on other roles hosted on Ansible Galaxy.
 
 Example Playbook
 ----------------
@@ -59,4 +57,4 @@ GNU GENERAL PUBLIC LICENSE
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+lex@l-c-c.ch

@@ -1,0 +1,23 @@
+---
+
+##############################################
+# RESTORE FROM S3
+- name: Create local restore script
+  template: src={{lsdr_duplicity_restore_script}}.j2 dest=/home/{{lsdr_restoring_os_user}}/{{lsdr_duplicity_restore_script}} owner={{lsdr_restoring_os_user}} group=www-data mode=0770
+
+- name: Create path to restore into
+  file: path={{lsdr_duplicity_restore_path}}
+    state=directory
+    owner={{lsdr_restoring_os_user}}
+    group={{lsdr_restoring_os_user}}
+    mode=777
+
+- name: Create duplicity log file
+  copy: content=""
+    dest=/var/log/duplicity.log
+    owner={{lsdr_restoring_os_user}}
+    group={{lsdr_restoring_os_user}}
+
+- name: Restore from Amazon AWS S3
+  command: /home/{{lsdr_restoring_os_user}}/{{lsdr_duplicity_restore_script}}
+  become_user: "{{lsdr_restoring_os_user}}"

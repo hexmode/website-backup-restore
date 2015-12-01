@@ -1,5 +1,7 @@
 ---
 
+# NO TRAILING SLASHES!
+
 lsdr_restoring_os_user: 
 lsdr_restoring_db_name: 
 
@@ -14,7 +16,8 @@ lsdr_gnupg_secret_passphrase:
 lsdr_restored_smw_root: 
 lsdr_restored_smw_dump_sql: 
 
-lsdr_smw_root: 
+lsdr_apache_root: /var/www/html
+lsdr_apache_smw_root: /var/www/html/w
 
 lsdr_public_gpg_key: |
   -----BEGIN PGP PUBLIC KEY BLOCK-----
