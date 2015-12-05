@@ -9,11 +9,20 @@ This role restores a [Semantic MediaWiki](http://www.semantic-mediawiki.org) ins
 4. Use [Duplicity](http://duplicity.nongnu.org/) to restore a backup set
 5. Copy the restored SMW root content into the dedicated SMW root created in step 2
 6. Import the restored SMW database backup .sql into the database created in step 3
-7. Run the following SMW maintenance scripts:
+7. PENDING: Run the following SMW maintenance scripts:
 	- maintenance/runJobs.php
 	- maintenance/rebuildall.php
 	- extensions/SemanticMediaWiki/maintenance/rebuildData.php
 	- extensions/Cargo/maintenance/cargoRecreateData.php (if installed)
+
+Best Practice Pattern: How to repeat 'vagrant up' while keeping a previously restored VM in VirtualBox
+------------------------------------------------------------------------------------------------------
+
+1. In VirtualBox select the previously restored VM
+2. Select Machine > Settings > General > Basic
+3. Add a timestamp as a prefix to the VM's name
+4. Click OK
+5. You may now repeat `vagrant up`, which will create another restore
 
 Requirements
 ------------
@@ -45,7 +54,7 @@ Example Playbook
 	  sudo: True
 	  gather_facts: False
 	  roles:
-	    - LinuxCompetenceCenter-Ansible-Roles.lcc-smw-duplicity-restore
+	    - LinuxCompetenceCenterGalaxy.lcc-smw-duplicity-restore
 	  post_tasks:
 	  	Place special operations here. (e.g. for adapting LocalSettings.php)
 
