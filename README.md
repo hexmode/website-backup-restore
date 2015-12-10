@@ -19,10 +19,13 @@ Best Practice Pattern: How to repeat 'vagrant up' while keeping a previously res
 ------------------------------------------------------------------------------------------------------
 
 1. In VirtualBox select the previously restored VM
-2. Select Machine > Settings > General > Basic
+2. Select in menu Machine > Clone...
 3. Add a timestamp as a prefix to the VM's name
-4. Click OK
-5. You may now repeat `vagrant up`, which will create another restore
+4. Check to "Reinitialize the MAC address of all network cards"
+5. Click "Continue"
+6. Select "Full clone"
+7. Click "Clone"
+8. You may now do `vagrant destroy && vagrant up`, which will create another restore
 
 Requirements
 ------------
