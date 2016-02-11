@@ -1,7 +1,7 @@
 ---
 
 - name: Copy the restored SMW root into the Apache root
-  command: cp --recursive {{lsdr_restored_smw_root}} {{lsdr_apache_smw_root}}
+  command: cp --recursive {{lsdr_restored_smw_root}}/* {{lsdr_apache_smw_root}}/
 
 - name: Adapt permissions for/in {{lsdr_apache_smw_root}}
   file: path={{lsdr_apache_smw_root}}
