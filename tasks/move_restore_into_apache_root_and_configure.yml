@@ -1,5 +1,9 @@
 ---
 
+- name: Create {{lsdr_apache_smw_root}}
+  file: path={{lsdr_apache_smw_root}}
+    state=directory
+
 - name: Copy the restored SMW root into the Apache root
   shell: cp --recursive {{lsdr_restored_smw_root}}/* {{lsdr_apache_smw_root}}/
 
