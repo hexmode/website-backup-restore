@@ -20,4 +20,5 @@
 
 - name: Restore from Amazon AWS S3
   command: /home/{{lsdr_restoring_os_user}}/{{lsdr_duplicity_restore_script}}
+  become: true
   become_user: "{{lsdr_restoring_os_user}}"
