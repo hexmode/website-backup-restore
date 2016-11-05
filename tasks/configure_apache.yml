@@ -1,15 +1,30 @@
 ---
 
 - name: Activate mod rewrite
-  apache2_module: state=present name=rewrite
-  notify: start apache
+  apache2_module: state=present name={{item}}
+  with_items:
+    - rewrite
+    - ssl
+  notify: restart apache
 
-- name: Create 000-default.conf
-  template: src=000-default.conf.j2
-    dest=/etc/apache2/sites-available/000-default.conf
+- name: Create certificate files subdirectory
+  file: path=/etc/apache2/ssl
+    state=directory
+    mode=0755
+
+# See https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-apache-for-ubuntu-14-04
+- name: Create Self-Signed SSL Certificate
+  command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+
+- name: Create default-ssl.conf
+  template: src=default-ssl.conf.j2
+    dest=/etc/apache2/sites-available/default-ssl.conf
     owner=root
     group=root
     mode=0644
+
+- name: Activate the SSL Virtual Host
+  command: a2ensite default-ssl.conf
   notify:
     - restart apache
     - restart mysql
