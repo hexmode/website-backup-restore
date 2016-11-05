@@ -1,9 +1,9 @@
 <IfModule mod_ssl.c>
     <VirtualHost _default_:443>
-        ServerAdmin >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>admin@example.com
-        ServerName >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>your_domain.com
-        ServerAlias >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>www.your_domain.com
-        DocumentRoot >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/var/www/html
+        ServerAdmin lex@l-c-c.ch
+        ServerName smwck.ocalhost
+        #ServerAlias www.smwck.localhost
+        DocumentRoot /var/www/html
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
         SSLEngine on
@@ -19,5 +19,12 @@
                         nokeepalive ssl-unclean-shutdown \
                         downgrade-1.0 force-response-1.0
         BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+        <Directory /var/www/html>
+                RewriteEngine On
+                Options FollowSymLinks
+                AllowOverride None
+                RewriteRule ^/?main(/.*)?$ /var/www/html/m/index.php [L]
+        </Directory>
+
     </VirtualHost>
 </IfModule>

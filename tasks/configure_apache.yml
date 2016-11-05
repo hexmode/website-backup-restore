@@ -13,8 +13,18 @@
     mode=0755
 
 # See https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-apache-for-ubuntu-14-04
-- name: Create Self-Signed SSL Certificate
-  command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+# Create Self-Signed SSL Certificate
+# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+
+- name: Copy certificates
+  template: src={{item}}
+    dest=/etc/apache2/ssl/{{item}}
+    owner={{lsdr_restoring_os_user}}
+    group=www-data
+    mode=0770
+  with_items:
+    - apache.key
+    - apache.crt
 
 - name: Create default-ssl.conf
   template: src=default-ssl.conf.j2
