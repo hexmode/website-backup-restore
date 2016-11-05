@@ -9,3 +9,11 @@ duplicity {{lsdr_amazon_s3_bucket_url}} \
 mysql \
   --defaults-file=/home/{{lsdr_restoring_os_user}}/.my.cnf \
   -u {{lsdr_restoring_os_user}} {{lsdr_restoring_db_name}} < {{lsdr_restored_smw_dump_sql}}
+
+duplicity collection-status  {{lsdr_amazon_s3_bucket_url}} \
+  | tac \
+  | grep -m 1 -E "(Incremental|Full) *(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) {1,2}[0-9]{1,2}" \
+  > {{lsdr_apache_smw_root}}/date_of_restored_backup
+
+# string = File.read("test")
+# File.read("test").scan(/(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) {1,2}([0-9]{1,2}) (?:[0-9\:]){8} ([0-9]{4})/)
